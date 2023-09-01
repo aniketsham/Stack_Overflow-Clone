@@ -13,7 +13,7 @@ const Razor = () => {
   const id =User?.result?._id
   const handlePayment=async()=>{
     
-    const API_URL = 'http://localhost:8000'
+    const API_URL = 'https://stack-overflow-clone-uev0.onrender.com'
     
     const orderUrl = `${API_URL}/user/order/${subsValue}`;
     const response = await Axios.post(orderUrl);
