@@ -72,7 +72,7 @@ var mailOptions = {
     from: "anikets2048@gmail.com",
     text: emailTemplate({
       email,
-      link: `http://localhost:3000/UpdatePassword/${existinguser._id}/${temp_token}`,
+      link: `https://stack-overflow-clone-aniket.netlify.app/UpdatePassword/${existinguser._id}/${temp_token}`,
     }),
     to: email,
     subject: "Stack Overflow recovery email",
