@@ -73,7 +73,7 @@ const QuestionDetails=()=>{
     const Navigate=useNavigate()
     const location=useLocation()
     console.log(location)
-    const url="http://localhost:3000"
+    const url="https://stack-overflow-clone-aniket.netlify.app"
     const dispatch=useDispatch()
     const User=useSelector((state)=>(state.currentUserReducer))
     const handlePostAns = (e, answerLength) => {
@@ -101,7 +101,7 @@ const QuestionDetails=()=>{
       };
 
       const handleDelete=()=>{
-        dispatch(deleteQuestion())
+        dispatch(deleteQuestion(id, Navigate))
       }
       const handleShare=()=>{
         copy(url+location.pathname)

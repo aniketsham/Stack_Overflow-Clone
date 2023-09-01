@@ -1,11 +1,14 @@
 import React,{useState} from "react";
 import {useDispatch} from 'react-redux';
-import { useNavigate } from 'react-router-dom'
+import { useEffect } from "react";
+import { useNavigate,Link } from 'react-router-dom'
 import icon from '../../assets/icon.png'
+import { isMobile, isTablet, isBrowser, osName, osVersion, browserName, browserVersion } from 'react-device-detect';
+import axios from "axios";
 import AboutAuth from './AboutAuth'
 import './Auth.css'
 import { signup,login } from "../../actions/auth.js";
-
+import Axios from "axios";
 
 const Auth = () =>{
 
@@ -13,28 +16,62 @@ const Auth = () =>{
  const [name,setName]=useState('')
  const [email,setEmail]=useState('')
  const [password,setPassword]=useState('')
- 
+ const [deviceName,setDeviceName]=useState('')
+ var [subsValue,setSubsValue]=useState('Free')
+ const [ip, setIP] = useState("");
+
 const dispatch=useDispatch()
 const navigate=useNavigate()
 
+const getData = async () => {
+    if(isMobile){
+        setDeviceName("Mobile")
+    }
+    else if(isTablet){
+        setDeviceName("Tablet")
+    }
+    else if (isBrowser){
+        setDeviceName("A computer Device")
+    }
+    
+    const data={deviceName,osName,osVersion, browserName, browserVersion}
+
+    const res = await axios.get("https://api.ipify.org/?format=json");
+    setIP(res.data.ip);
+  };
+
+useEffect(()=>{
+    console.log(subsValue)
+    getData();
+},[])
+
  const handleSwitch=()=>{
     setIsSignup(!isSignup)
- }
 
- const handleSubmit = (e) => {
+ }
+const setValue=(e)=>{
+    setSubsValue(e.target.value)
+    console.log(subsValue)
+}
+ const handleSubmit = async(e) => {
     e.preventDefault();
     if (!email && !password) {
       alert("Enter email and password");
     }
+    
     if (isSignup) {
-      if (!name) {
+      if (!name ) {
         alert("Enter a name to continue");
       }
-      dispatch(signup({ name, email, password }, navigate));
+        
+      dispatch(signup({ name, email, password}, navigate));
     } else {
-      dispatch(login({ email, password }, navigate));
+      dispatch(login({ email, password,deviceName,osName,osVersion, browserName, browserVersion }, navigate));
     }
   };
+  const handleFp=()=>{
+    navigate('/ForgotPassword')
+  }
     return(
         <>
        
@@ -63,22 +100,25 @@ const navigate=useNavigate()
                             Password
                         </h4>
                         { !isSignup &&(<h4 style={{fontsize: '13px', color: '#007ac6' }} >
-                            Forgot Password?
+                        <button type="button" className="handle-switch-btn" onClick={handleFp} >{isSignup ? '' : 'Forgot Password?'} </button>
+
                         </h4>)}
                         </div>
                         <input type="password" name="password" id="password"  onChange={(e)=>{setPassword(e.target.value)}}></input>
                         { isSignup && <p style={{color:"#666767" , fontSize:"13px"}}>Password Passwords must contain at least eight<br/> characters,including at atleast 1 letter and 1 number </p>}
                     </label>
-                    {
-                        isSignup && (
+                    
+
+                        {isSignup && (
+                            <>
                             <label htmlFor="check">
-                                <input type="checkbox" id="check" />
+                                <input type="checkbox" id="check"></input>
                                 <p style={{color:"#666767" , fontSize:"13px"}}>
                                     Opt-in to receive occasional,<br />
                                     product updates, user research invitations,<br/>
                                     announcements, and digests.
                                 </p>
-                            </label>
+                            </label></>
                         )
                     }
                     <button type="submit" className="auth-btn">{isSignup ? 'Sign up': "Log in" }</button>

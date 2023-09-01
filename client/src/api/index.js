@@ -20,3 +20,8 @@ export const deleteAnswer=(id,answerId,noOfAnswers,userId)=>API.patch(`/answer/d
 
 export const fetchAllUsers=()=>API.post('/user/getAllUsers')
 export const updateProfile=(id,updateData)=>API.post(`/user/update/${id}`,updateData)
+export const forgotPassword=(authData)=>API.post('/user/forgotpassword',authData)
+export const verifyToken=(authData)=>API.post(`/user/verifyToken`,authData)
+export const orderPayment=(subsValue)=>API.post(`/user/order/${subsValue}`)
+export const capturePayment=(paymentId)=>API.post(`/user/capture`,paymentId)
+export const setSubsDetails=(id,subsValue)=>API.post(`/user/setSubsDetails/${id}`,subsValue)

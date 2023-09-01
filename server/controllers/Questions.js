@@ -1,12 +1,60 @@
 import Questions from "../models/Questions.js";
 import mongoose from "mongoose";
-
+import users from "../models/auth.js";
+import cron from 'node-cron';
 export const AskQuestion = async (req, res) => {
   const postQuestionData = req.body;
+  const _id=postQuestionData.userId
   const postQuestion = new Questions(postQuestionData);
   try {
-    await postQuestion.save();
-    res.status(200).json("Posted a question successfully");
+    console.log(postQuestionData.userId)
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+      return res.status(404).send("question unavailable...");
+    }
+    var  existinguser = await users.findById(_id);
+    var sub_id=existinguser.subscription[existinguser.subscription.length-1].subscription_Id
+    const subsValue=existinguser.subscription[existinguser.subscription.length-1].subscription_Type
+    const currentDate = new Date();
+
+    if(existinguser.subscription[existinguser.subscription.length-1].expiry_Date>=currentDate){
+      if(existinguser.subscription[existinguser.subscription.length-1].limit>0){
+        const limit=parseInt(existinguser.subscription[existinguser.subscription.length-1].limit)-1
+        console.log(limit)
+        const updatedProfile=await users.findOneAndUpdate({_id:existinguser._id,'subscription.subscription_Id':sub_id},{$set:{ 'subscription.$.limit': limit }})
+        console.log(updatedProfile)
+        //const dec_limit = await users.findById(_id);
+        //console.log(dec_limit)
+        if (subsValue==="Free"){
+          var new_Limit=1
+        }
+        else if (subsValue==="Silver"){
+          var new_Limit=5
+        }
+        else{
+          var new_Limit=99999999
+        }
+        if(existinguser.subscription[existinguser.subscription.length-1].limit===new_Limit){
+        cron.schedule('0 0 * * *', async() =>{
+          
+        const updatedLimit= await users.findOneAndUpdate({_id:existinguser._id,'subscription.subscription_Id':sub_id},{$set:{ 'subscription.$.limit': new_Limit }})
+        console.log(updatedLimit)});}
+      
+        await postQuestion.save();
+        res.status(200).json({message:"Posted a question successfully"});
+      }
+      else{
+        res.status(200).json("You have exceeded the limit to ask the question");
+      }
+    }
+    else{
+      const updatedLimit= await users.findOneAndUpdate({_id:existinguser._id,'subscription.subscription_Id':sub_id},{$set:{ 'subscription.$.subscription_Type':"Free",'subscription.$.limit': 1 }})
+      console.log(updatedLimit)
+
+      res.status(200).json("Your subscription has expired");
+
+    }
+    
+
   } catch (error) {
     console.log(error);
     res.status(409).json("Couldn't post a new question");
@@ -24,14 +72,17 @@ export const getAllQuestions=async(req,res)=>{
 }
 
 export const deleteQuestion=async(req,res)=>{
-  const {id:_id}=req.params;
+  const { id: _id } = req.params;
+
   if (!mongoose.Types.ObjectId.isValid(_id)) {
     return res.status(404).send("question unavailable...");
   }
+
   try {
-    await Questions.findByIdRemove(_id);
+    await Questions.findByIdAndRemove(_id);
     res.status(200).json({message:'Succesfully Deleted ... '})
   } catch (error) {
+    console.log({message:error.message})
     res.status(404).json({message:error.message})
   }
 }

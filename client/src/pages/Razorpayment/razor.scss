@@ -1,0 +1,43 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+.container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.subscription {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.subscription h2 {
+  margin: 0;
+}
+.subscription p {
+  margin: 5px 0;
+}
+.basic {
+  background-color: #f9f9f9;
+}
+.standard {
+  background-color: #c5c5c5;
+}
+.premium {
+  background-color: #f0ea6b;
+}
+
+input {
+  display: inline;
+  align-items: end;
+  width: 10em;  
+  height: 2em;
+}

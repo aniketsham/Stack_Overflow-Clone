@@ -13,6 +13,9 @@ const Navbar = () =>{
     const dispatch=useDispatch()
     var User=useSelector((state)=>(state.currentUserReducer))
     const navigate=useNavigate()
+    const handleSubs=()=>{
+        navigate('/payment')
+    }
     const handleLogout=()=>{
         dispatch({type:"LOGOUT"})
         navigate('/')
@@ -58,6 +61,8 @@ const Navbar = () =>{
         <>
             <Avatar backgroundColor='#009dff' px='10px' py='10px' borderRadius='50%' color='white'  ><Link to={`/Users/${User?.result?._id}`} style={{color:"white", textDecoration:'none'}}>{User.result.name.charAt(0).toUpperCase()}</Link></Avatar>
             <button className="nav-items nav-links" onClick={handleLogout}>Log out</button>
+
+            <button className="nav-items nav-links" onClick={handleSubs}>Buy Subscription</button>
         </>)
     }
     </div>

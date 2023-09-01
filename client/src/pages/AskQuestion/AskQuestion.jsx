@@ -20,6 +20,7 @@ const AskQuestion=()=>
 
     const handleEnter=(e)=>{
         if(e.key === 'Enter'){
+            console.log(User?.result?._id)
             setQuestionBody(questionBody+'\n')
         }
     }

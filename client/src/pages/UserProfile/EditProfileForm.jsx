@@ -13,6 +13,7 @@ const EditProfileForm = ({currentUser,setSwitch}) => {
       if (tags[0] === "" || tags.length === 0) {
         alert("Update tags field");
       } else {
+        alert(currentUser?.result?._id)
         dispatch(updateProfile(currentUser?.result?._id, { name, about, tags }));
       }
       setSwitch(false);

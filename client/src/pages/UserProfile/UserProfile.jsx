@@ -15,7 +15,7 @@ const UserProfile = () => {
     const users = useSelector((state) => state.usersReducer);
     const currentProfile =(users.filter((user) => user._id === id)[0]);
     const currentUser=useSelector((state)=>state.currentUserReducer)
-    console.log(currentProfile)
+    console.log(currentUser)
     const [Switch,setSwitch]=useState(false)
   return (
     <div className="home-container-1">
@@ -30,17 +30,22 @@ const UserProfile = () => {
               
                 <div className="user-name">
                 <h1>{currentProfile?.name}</h1>
+                <p>Subscription Type:{currentUser?.result?.subscription[currentUser?.result?.subscription.length-1].subscription_Type}</p>
+
                 <p><FontAwesomeIcon icon={faBirthdayCake} /> Joined{" "}{moment(currentProfile?.joinedOn).fromNow()}</p>
               </div>
               </div>
-               
                 {
                     currentUser?.result._id === id &&(
+                      
                         <button type='button' onClick={()=>setSwitch(true)} className='edit-profile-btn' >
                             <FontAwesomeIcon icon={faPen}/> Edit Profile
                         </button>
                     )}
               
+                </div>
+                <div>
+                  
                 </div>
                 <>
                         {Switch ?(
