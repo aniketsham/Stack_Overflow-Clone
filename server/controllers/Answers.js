@@ -45,13 +45,16 @@ export const deleteAnswer=async(req,res)=>{
   }
   updateNoOfQuestions(_id,noOfAnswers)
   try {
-    await Questions.updateOne(
+    const DA=await Questions.updateOne(
       {_id},
       {$pull:{'answer':{_id:answerId}}}
 
     )
-    req.status(200).json({message:"Question Deleted... "})
+
+    return req.status(200).json({message:"Question Deleted... "})
   } catch (error) {
-    res.status(405).json(error)
+
+    console.log(error)
+    return res.status(405).json(error)
   }
 }
