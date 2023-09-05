@@ -37,8 +37,7 @@ export const login = async (req, res) => {
     }
     const token = jwt.sign(
       { email: existinguser.email, id: existinguser._id },`${process.env.JWT_SECRET}`,{ expiresIn: "1h" });
-      const updatedProfile=await users.findByIdAndUpdate(existinguser._id,{$addToSet: { user_device_details:[{'deviceName':deviceName,'osName':osName,'osVersion':osVersion,'browserName':browserName,'browserVersion':browserVersion}]}})
-      console.log(updatedProfile)
+      const updatedProfile=await users.findByIdAndUpdate(existinguser._id,{$addToSet: { user_device_details:[{'deviceName':deviceName,'osName':osName,'osVersion':osVersion,'browserName':browserName,'browserVersion':browserVersion}]}});
       res.status(200).json({ result: existinguser,token });
   } catch (error) {
     res.status(500).json("Something went wrong...");
